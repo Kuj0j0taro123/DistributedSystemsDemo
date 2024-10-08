@@ -7,6 +7,7 @@ public class Peer {
     // hard coded the destination host address for now
     private String destinationAddress = "localhost";
     private int destinationPort;
+    String message;
 
 
     public Peer(int listenPort, int destinationPort){
@@ -37,16 +38,27 @@ public class Peer {
                         messageStringBuilder.append(messageChunk);
                     }
                     
-                    String message = messageStringBuilder.toString();
+                    String receivedMessage = messageStringBuilder.toString();
+                    
+                    
 
-                    System.out.println("Message: " + message);
-
+                    System.out.println("Message: " + receivedMessage);
+                    
+                    if (this.message != null){
+                        if (message.equals(receivedMessage)){
+                            System.out.println("Received the same message twice in a row. Exiting.");
+                            System.exit(0);
+                        }
+                    }
+                    
+                    
+                    message = receivedMessage;
 
                     Thread.sleep(5000);
 
                     // relay data to the next peer
 
-                    send(message);
+                    send(receivedMessage);
                 } catch (IOException e) {
                     System.err.println("Error handling client connection: " + e.getMessage());
                 } catch (InterruptedException e) {
